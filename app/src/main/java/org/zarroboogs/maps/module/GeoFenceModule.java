@@ -40,7 +40,7 @@ public class GeoFenceModule {
     private BaiduMap mBaiduMap;
 
     private LocationManagerProxy mLocationManagerProxy;//定位实例
-    public static final String GEOFENCE_BROADCAST_ACTION = "com.location.apis.geofencedemo.broadcast";
+
     private PendingIntent mPendingIntent;
 
     public GeoFenceModule(MapView mapView){
@@ -63,45 +63,12 @@ public class GeoFenceModule {
 
         IntentFilter fliter = new IntentFilter(
                 ConnectivityManager.CONNECTIVITY_ACTION);
-        fliter.addAction(GEOFENCE_BROADCAST_ACTION);
-        mContext.registerReceiver(mGeoFenceReceiver, fliter);
+//        fliter.addAction(GEOFENCE_BROADCAST_ACTION);
+//        mContext.registerReceiver(mGeoFenceReceiver, fliter);
+//
+//        Intent intent = new Intent(GEOFENCE_BROADCAST_ACTION);
+//        mPendingIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
 
-        Intent intent = new Intent(GEOFENCE_BROADCAST_ACTION);
-        mPendingIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
-
-
-        // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
-        // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用removeUpdates()方法来取消定位请求
-        // 在定位结束后，在合适的生命周期调用destroy()方法
-        // 其中如果间隔时间为-1，则定位只定一次
-        //在单次定位情况下，定位无论成功与否，都无需调用removeUpdates()方法移除请求，定位sdk内部会移除
-        mLocationManagerProxy.requestLocationData(
-                LocationProviderProxy.AMapNetwork, 2000, 15, new AMapLocationListener() {
-                    @Override
-                    public void onLocationChanged(AMapLocation aMapLocation) {
-                        Log.d(TAG    ,"onLocationChanged");
-                    }
-
-                    @Override
-                    public void onLocationChanged(Location location) {
-                        Log.d(TAG    ,"onLocationChanged");
-                    }
-
-                    @Override
-                    public void onStatusChanged(String s, int i, Bundle bundle) {
-                        Log.d(TAG    ,"onStatusChanged");
-                    }
-
-                    @Override
-                    public void onProviderEnabled(String s) {
-                        Log.d(TAG    ,"onProviderEnabled");
-                    }
-
-                    @Override
-                    public void onProviderDisabled(String s) {
-                        Log.d(TAG    ,"onProviderDisabled");
-                    }
-                });
     }
 
 
@@ -110,7 +77,7 @@ public class GeoFenceModule {
         mLocationManagerProxy.removeGeoFenceAlert(mPendingIntent);
 //        mLocationManagerProxy.removeUpdates(this);
         mLocationManagerProxy.destroy();
-        mContext.unregisterReceiver(mGeoFenceReceiver);
+//        mContext.unregisterReceiver(mGeoFenceReceiver);
 
         TTSController ttsController = TTSController.getInstance(mContext);
         ttsController.destroy();
@@ -133,26 +100,4 @@ public class GeoFenceModule {
         OverlayOptions oo = new MarkerOptions().position(baiduLatLong).icon(mCameraBd).draggable(true);
         Marker marker = (Marker) (mBaiduMap.addOverlay(oo));
     }
-
-    private BroadcastReceiver mGeoFenceReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG    ,"onReceive");
-            TTSController ttsController = TTSController.getInstance(mContext);
-            // 接受广播
-            if (intent.getAction().equals(GEOFENCE_BROADCAST_ACTION)) {
-                Bundle bundle = intent.getExtras();
-                // 根据广播的status来确定是在区域内还是在区域外
-                int status = bundle.getInt("status");
-                if (status == 0) {
-                    Toast.makeText(mContext, "不在区域", Toast.LENGTH_SHORT).show();
-                    ttsController.playText("不在区域");
-                } else {
-                    Toast.makeText(mContext, "在区域内", Toast.LENGTH_SHORT).show();
-                    ttsController.playText("在区域内");
-                }
-            }
-
-        }
-    };
 }
