@@ -99,7 +99,7 @@ public class GeoFenceModule {
     }
 
 
-    public void onPause() {
+    public void onDestory() {
         // 销毁定位
         mLocationManagerProxy.removeGeoFenceAlert(mPendingIntent);
 //        mLocationManagerProxy.removeUpdates(this);

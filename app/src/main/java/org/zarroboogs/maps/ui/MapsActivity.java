@@ -75,7 +75,6 @@ public class MapsActivity extends AppCompatActivity {
         mMapView.onPause();
         mLocationModule.onPause();
 
-        mGeoFenceModule.onPause();
         super.onPause();
     }
 
@@ -96,6 +95,9 @@ public class MapsActivity extends AppCompatActivity {
         super.onDestroy();
         // 回收 bitmap 资源
         mMarkerModule.onDestroy();
+
+        // GeoFence
+        mGeoFenceModule.onDestory();
     }
 
 }
