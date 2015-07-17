@@ -10,8 +10,10 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.model.LatLng;
 
 import org.zarroboogs.maps.R;
+import org.zarroboogs.maps.module.GeoFenceModule;
 import org.zarroboogs.maps.module.LocationModule;
 import org.zarroboogs.maps.module.MarkerModule;
 
@@ -24,6 +26,7 @@ public class MapsActivity extends AppCompatActivity {
     // 定位
     private LocationModule mLocationModule;
     private MarkerModule mMarkerModule;
+    private GeoFenceModule mGeoFenceModule;
 
     private Button mLocationBtn;
 
@@ -61,6 +64,9 @@ public class MapsActivity extends AppCompatActivity {
         mLocationModule = new LocationModule(getApplicationContext());
         mLocationModule.startLocation(mMapView);
 
+        mGeoFenceModule = new GeoFenceModule(mMapView);
+        mGeoFenceModule.addGeoFence(new LatLng(40.012984f,116.489999f));
+
     }
 
     @Override
@@ -68,6 +74,8 @@ public class MapsActivity extends AppCompatActivity {
         // MapView的生命周期与Activity同步，当activity挂起时需调用MapView.onPause()
         mMapView.onPause();
         mLocationModule.onPause();
+
+        mGeoFenceModule.onPause();
         super.onPause();
     }
 
