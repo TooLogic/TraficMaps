@@ -55,6 +55,12 @@ public class GeoFenceModule {
     }
 
     public void registerListener(){
+        TTSController ttsController = TTSController.getInstance(mContext);
+        ttsController.init();
+
+//        ttsController.startSpeaking();
+
+
         IntentFilter fliter = new IntentFilter(
                 ConnectivityManager.CONNECTIVITY_ACTION);
         fliter.addAction(GEOFENCE_BROADCAST_ACTION);
@@ -105,6 +111,9 @@ public class GeoFenceModule {
 //        mLocationManagerProxy.removeUpdates(this);
         mLocationManagerProxy.destroy();
         mContext.unregisterReceiver(mGeoFenceReceiver);
+
+//        TTSController ttsController = TTSController.getInstance(mContext);
+//        ttsController.stopSpeaking();
     }
 
     public void addGeoFence(com.baidu.mapapi.model.LatLng baiduLatLong) {
@@ -128,7 +137,7 @@ public class GeoFenceModule {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG    ,"onReceive");
-
+            TTSController ttsController = TTSController.getInstance(mContext);
             // 接受广播
             if (intent.getAction().equals(GEOFENCE_BROADCAST_ACTION)) {
                 Bundle bundle = intent.getExtras();
@@ -136,10 +145,11 @@ public class GeoFenceModule {
                 int status = bundle.getInt("status");
                 if (status == 0) {
                     Toast.makeText(mContext, "不在区域", Toast.LENGTH_SHORT).show();
+                    ttsController.playText("不在区域");
                 } else {
                     Toast.makeText(mContext, "在区域内", Toast.LENGTH_SHORT).show();
+                    ttsController.playText("在区域内");
                 }
-
             }
 
         }
