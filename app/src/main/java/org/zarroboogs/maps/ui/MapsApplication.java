@@ -5,7 +5,9 @@ import android.content.Context;
 
 import com.baidu.mapapi.SDKInitializer;
 
-public class DemoApplication extends Application {
+import org.zarroboogs.maps.module.TTSController;
+
+public class MapsApplication extends Application {
 
 	private static Context sCntext;
 
@@ -15,6 +17,8 @@ public class DemoApplication extends Application {
 		// 在使用 SDK 各组间之前初始化 context 信息，传入 ApplicationContext
 		SDKInitializer.initialize(this);
 		sCntext = this;
+		TTSController ttsController = TTSController.getInstance(this.getApplicationContext());
+		ttsController.init();
 	}
 
 	public static Context getAppContext(){

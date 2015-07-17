@@ -3,7 +3,7 @@ package org.zarroboogs.maps.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import org.zarroboogs.maps.ui.DemoApplication;
+import org.zarroboogs.maps.ui.MapsApplication;
 
 import java.io.InputStream;
 
@@ -25,8 +25,8 @@ public class FileUtils {
         return null;
     }
 
-    private static final SharedPreferences sPreference = DemoApplication.getAppContext().getSharedPreferences(
-            DemoApplication.getAppContext().getPackageName(), Context.MODE_PRIVATE);
+    private static final SharedPreferences sPreference = MapsApplication.getAppContext().getSharedPreferences(
+            MapsApplication.getAppContext().getPackageName(), Context.MODE_PRIVATE);
 
     public static String readSharedPreference(String key) {
         return sPreference.getString(key, "");

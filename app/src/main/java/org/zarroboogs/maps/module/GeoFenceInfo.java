@@ -15,24 +15,29 @@ public class GeoFenceInfo {
     private LatLng latLng;
     private int mId = 0;
 
-    private String GEOFENCE_BROADCAST_ACTION = "org.zarroboogs.maps.geofence_broadcast";
+    public static final String GEOFENCE_BROADCAST_ACTION = "org.zarroboogs.maps.geofence_broadcast";
 
     private IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
 
     private PendingIntent mPendingIntent;
 
-    public GeoFenceInfo(Context context, int id) {
+    public GeoFenceInfo(Context context, LatLng ll, int id) {
         this.mId = id;
+        this.latLng = ll;
         filter.addAction(GEOFENCE_BROADCAST_ACTION + mId);
 
         Intent intent = new Intent(GEOFENCE_BROADCAST_ACTION + mId);
         mPendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
     }
 
+    public String getAction() {
+        return GEOFENCE_BROADCAST_ACTION + mId;
+    }
 
-    public LatLng getLatLng(){
+    public LatLng getLatLng() {
         return latLng;
     }
+
     public PendingIntent getPendingIntent() {
         return mPendingIntent;
     }

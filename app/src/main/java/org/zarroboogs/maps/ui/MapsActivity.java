@@ -65,8 +65,7 @@ public class MapsActivity extends AppCompatActivity {
         mLocationModule.startLocation(mMapView);
 
         mGeoFenceModule = new GeoFenceModule(mMapView);
-        mGeoFenceModule.addGeoFence(new LatLng(40.012984f,116.489999f));
-
+        mGeoFenceModule.onCreate();
     }
 
     @Override
@@ -98,6 +97,7 @@ public class MapsActivity extends AppCompatActivity {
 
         // GeoFence
         mGeoFenceModule.onDestory();
+
     }
 
 }

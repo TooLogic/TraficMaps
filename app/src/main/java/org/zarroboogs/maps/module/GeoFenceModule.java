@@ -27,7 +27,12 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 
 import org.zarroboogs.maps.R;
+import org.zarroboogs.maps.beans.PaperCameraBean;
+import org.zarroboogs.maps.utils.FileUtils;
+import org.zarroboogs.maps.utils.JsonUtils;
 import org.zarroboogs.maps.utils.LatLngUtils;
+
+import java.util.ArrayList;
 
 /**
  * Created by wangdiyuan on 15-7-17.
@@ -39,65 +44,39 @@ public class GeoFenceModule {
     private MapView mapView;
     private BaiduMap mBaiduMap;
 
-    private LocationManagerProxy mLocationManagerProxy;//定位实例
+    private GeoFenceManager mGeoFenceManager;
 
-    private PendingIntent mPendingIntent;
 
-    public GeoFenceModule(MapView mapView){
+    public GeoFenceModule(MapView mapView) {
         this.mContext = mapView.getContext().getApplicationContext();
         this.mapView = mapView;
 
         this.mBaiduMap = mapView.getMap();
 
-        mLocationManagerProxy = LocationManagerProxy.getInstance(mContext);
+        mGeoFenceManager = new GeoFenceManager(mContext);
 
-        registerListener();
-    }
-
-    public void registerListener(){
-        TTSController ttsController = TTSController.getInstance(mContext);
-        ttsController.init();
-
-//        ttsController.startSpeaking();
-
-
-        IntentFilter fliter = new IntentFilter(
-                ConnectivityManager.CONNECTIVITY_ACTION);
-//        fliter.addAction(GEOFENCE_BROADCAST_ACTION);
-//        mContext.registerReceiver(mGeoFenceReceiver, fliter);
-//
-//        Intent intent = new Intent(GEOFENCE_BROADCAST_ACTION);
-//        mPendingIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
 
     }
 
+
+    public void onCreate() {
+        ArrayList<PaperCameraBean> cameras = JsonUtils.prasePaperCameras(FileUtils.readStringFromAsset(mContext, "db.json"));
+        ArrayList<GeoFenceInfo> infs = new ArrayList<>();
+
+        for (PaperCameraBean paperCameraBean : cameras) {
+            GeoFenceInfo geoFenceInfo = new GeoFenceInfo(mContext, new com.baidu.mapapi.model.LatLng(paperCameraBean.getLatitude(), paperCameraBean.getLongtitude()), paperCameraBean.getId());
+            infs.add(geoFenceInfo);
+        }
+        GeoFenceInfo geoFenceInfo = new GeoFenceInfo(mContext, new com.baidu.mapapi.model.LatLng(40.09705f, 116.426019f), 100);
+        infs.add(geoFenceInfo);
+        //40.09705-116.426019
+
+        mGeoFenceManager.addAllGeoFenceAler(infs);
+    }
 
     public void onDestory() {
-        // 销毁定位
-        mLocationManagerProxy.removeGeoFenceAlert(mPendingIntent);
-//        mLocationManagerProxy.removeUpdates(this);
-        mLocationManagerProxy.destroy();
-//        mContext.unregisterReceiver(mGeoFenceReceiver);
-
-        TTSController ttsController = TTSController.getInstance(mContext);
-        ttsController.destroy();
+        mGeoFenceManager.removeAllGeoFenceAlert();
     }
 
 
-    public void addGeoFence(com.baidu.mapapi.model.LatLng baiduLatLong) {
-        com.baidu.mapapi.model.LatLng tmp = LatLngUtils.Baidu2Gaode(baiduLatLong);
-
-        LatLng latLng = new LatLng(tmp.latitude, tmp.longitude);
-
-        mLocationManagerProxy.removeGeoFenceAlert(mPendingIntent);
-
-        //地理围栏使用时需要与定位请求方法配合使用
-        // 设置地理围栏，位置、半径、超时时间、处理事件
-        mLocationManagerProxy.addGeoFenceAlert(latLng.latitude,
-                latLng.longitude, 1000, 1000 * 60 * 30, mPendingIntent);
-
-        BitmapDescriptor mCameraBd = BitmapDescriptorFactory.fromResource(R.drawable.icon_markc);
-        OverlayOptions oo = new MarkerOptions().position(baiduLatLong).icon(mCameraBd).draggable(true);
-        Marker marker = (Marker) (mBaiduMap.addOverlay(oo));
-    }
 }
