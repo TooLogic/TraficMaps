@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">驾车进京</string>
+
+    <string name="geofence_des">点击地图，以点击点为中心建立地理围栏，再次点击地图修改地理围栏位置</string>
+</resources>
