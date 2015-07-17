@@ -112,9 +112,10 @@ public class GeoFenceModule {
         mLocationManagerProxy.destroy();
         mContext.unregisterReceiver(mGeoFenceReceiver);
 
-//        TTSController ttsController = TTSController.getInstance(mContext);
-//        ttsController.stopSpeaking();
+        TTSController ttsController = TTSController.getInstance(mContext);
+        ttsController.destroy();
     }
+
 
     public void addGeoFence(com.baidu.mapapi.model.LatLng baiduLatLong) {
         com.baidu.mapapi.model.LatLng tmp = LatLngUtils.Baidu2Gaode(baiduLatLong);
