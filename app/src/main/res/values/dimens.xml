@@ -25,4 +25,7 @@
 
     <dimen name="route_text_size">20sp</dimen>
 
+    <dimen name="size90">10dp</dimen>
+
+
 </resources>

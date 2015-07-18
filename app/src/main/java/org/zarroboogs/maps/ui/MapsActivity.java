@@ -1,10 +1,14 @@
 package org.zarroboogs.maps.ui;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapStatusUpdate;
@@ -28,19 +32,29 @@ public class MapsActivity extends AppCompatActivity {
     private MarkerModule mMarkerModule;
     private GeoFenceModule mGeoFenceModule;
 
-    private Button mLocationBtn;
+    private ImageButton mLocationBtn;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //透明状态栏
+
+        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);// 去掉标题栏
+
+        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);// 去掉信息栏
+        toggleHideyBar();
+
+        //        //透明状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        //透明导航栏
+//        //透明导航栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+
+        super.onCreate(savedInstanceState);
+
+
+
 
         setContentView(R.layout.maps_activity_layout);
 
-        mLocationBtn = (Button) findViewById(R.id.my_location_btn);
+        mLocationBtn = (ImageButton) findViewById(R.id.my_location_btn);
 
         mLocationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +80,55 @@ public class MapsActivity extends AppCompatActivity {
 
         mGeoFenceModule = new GeoFenceModule(mMapView);
         mGeoFenceModule.onCreate();
+
     }
+
+    /**
+     * Detects and toggles immersive mode (also known as "hidey bar" mode).
+     */
+    public void toggleHideyBar() {
+
+        // BEGIN_INCLUDE (get_current_ui_flags)
+        // The UI options currently enabled are represented by a bitfield.
+        // getSystemUiVisibility() gives us that bitfield.
+        int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
+        int newUiOptions = uiOptions;
+        // END_INCLUDE (get_current_ui_flags)
+        // BEGIN_INCLUDE (toggle_ui_flags)
+        boolean isImmersiveModeEnabled =
+                ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
+        if (isImmersiveModeEnabled) {
+            Log.i(TAG, "Turning immersive mode mode off. ");
+        } else {
+            Log.i(TAG, "Turning immersive mode mode on.");
+        }
+
+        // Navigation bar hiding:  Backwards compatible to ICS.
+        if (Build.VERSION.SDK_INT >= 14) {
+            newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        }
+
+        // Status bar hiding: Backwards compatible to Jellybean
+        if (Build.VERSION.SDK_INT >= 16) {
+            newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
+        }
+
+        // Immersive mode: Backward compatible to KitKat.
+        // Note that this flag doesn't do anything by itself, it only augments the behavior
+        // of HIDE_NAVIGATION and FLAG_FULLSCREEN.  For the purposes of this sample
+        // all three flags are being toggled together.
+        // Note that there are two immersive mode UI flags, one of which is referred to as "sticky".
+        // Sticky immersive mode differs in that it makes the navigation and status bars
+        // semi-transparent, and the UI flag does not get cleared when the user interacts with
+        // the screen.
+        if (Build.VERSION.SDK_INT >= 18) {
+            newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        }
+
+        getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
+        //END_INCLUDE (set_ui_flags)
+    }
+
 
     @Override
     protected void onPause() {

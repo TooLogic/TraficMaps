@@ -1,5 +1,10 @@
 package org.zarroboogs.maps.ui;
 
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.navi.AMapNavi;
 import com.amap.api.navi.AMapNaviListener;
 import com.amap.api.navi.AMapNaviView;
@@ -25,6 +30,8 @@ import org.zarroboogs.maps.module.TTSController;
 public class NaviExtendActivity extends Activity implements
 		 AMapNaviListener {
 	private AMapNaviView mAmapAMapNaviView;
+
+	private AMap mAMap ;
 	
 	private TextView mRouteInfoText;
 	private TextView mNaviInfoText;
@@ -43,6 +50,10 @@ public class NaviExtendActivity extends Activity implements
 		AMapNavi.getInstance(this).setAMapNaviListener(ttsManager);// 设置语音模块播报
 
 		init(savedInstanceState);
+
+		mAMap = mAmapAMapNaviView.getMap();
+
+		Marker marker = mAMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_gcoding)).position(new LatLng(39.989614f,116.481763f)));
 
 	}
 
