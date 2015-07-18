@@ -1,20 +1,17 @@
 package org.zarroboogs.maps.ui;
 
+import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.model.LatLng;
 
 import org.zarroboogs.maps.R;
 import org.zarroboogs.maps.module.GeoFenceModule;
@@ -22,7 +19,7 @@ import org.zarroboogs.maps.module.LocationModule;
 import org.zarroboogs.maps.module.MarkerModule;
 import org.zarroboogs.maps.utils.CommUtils;
 
-public class MapsActivity extends AppCompatActivity {
+public class MapsActivity extends Activity {
 
     public static final String TAG = "MapsActivity";
     private MapView mMapView;
