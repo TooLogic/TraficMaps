@@ -20,6 +20,7 @@ import org.zarroboogs.maps.R;
 import org.zarroboogs.maps.module.GeoFenceModule;
 import org.zarroboogs.maps.module.LocationModule;
 import org.zarroboogs.maps.module.MarkerModule;
+import org.zarroboogs.maps.utils.CommUtils;
 
 public class MapsActivity extends AppCompatActivity {
 
@@ -66,7 +67,15 @@ public class MapsActivity extends AppCompatActivity {
         mMapView = (MapView) findViewById(R.id.bmapView);
         BaiduMapUiUtils.removeUnusedViews(mMapView);
 
+
         mBaiduMap = mMapView.getMap();
+
+        mBaiduMap.setOnMapLoadedCallback(new BaiduMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                mBaiduMap.getUiSettings().setCompassPosition(CommUtils.getCompassPoint(getApplicationContext()));
+            }
+        });
         MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(14.0f);
         mBaiduMap.setMapStatus(msu);
 

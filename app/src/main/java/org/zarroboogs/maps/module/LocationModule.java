@@ -23,6 +23,7 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 
 import org.zarroboogs.maps.debug.Debuger;
+import org.zarroboogs.maps.utils.CommUtils;
 import org.zarroboogs.maps.utils.FileUtils;
 
 /**
@@ -69,6 +70,8 @@ public class LocationModule {
         mLocationClient.start();
 
         changeLocationModeIfDrag();
+
+
     }
 
     private void changeLocationModeIfDrag(){
